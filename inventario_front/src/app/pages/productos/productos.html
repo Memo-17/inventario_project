@@ -1,0 +1,88 @@
+<main class="page">
+	<section class="card form-card">
+		<h1>Inventario de Productos</h1>
+		<p class="subtitle">Gestiona tu API Django desde Angular.</p>
+
+		<form [formGroup]="form" (ngSubmit)="guardar()" class="grid-form">
+			<label>
+				Nombre
+				<input type="text" formControlName="nombre" />
+			</label>
+
+			<label>
+				Marca
+				<input type="text" formControlName="marca" />
+			</label>
+
+			<label class="full">
+				Descripcion
+				<textarea rows="3" formControlName="descripcion"></textarea>
+			</label>
+
+			<label>
+				Cantidad minima
+				<input type="number" formControlName="cantidad_min" />
+			</label>
+
+			<label>
+				Cantidad maxima
+				<input type="number" formControlName="cantidad_max" />
+			</label>
+
+			<label>
+				Precio
+				<input type="number" step="0.01" formControlName="precio" />
+			</label>
+
+			<div class="actions full">
+				<button type="submit" [disabled]="form.invalid">
+					{{ editandoId() ? 'Actualizar' : 'Crear' }}
+				</button>
+				<button
+					*ngIf="editandoId()"
+					type="button"
+					class="secondary"
+					(click)="cancelarEdicion()"
+				>
+					Cancelar
+				</button>
+			</div>
+		</form>
+
+		<p class="error" *ngIf="error()">{{ error() }}</p>
+	</section>
+
+	<section class="card list-card">
+		<h2>Productos registrados</h2>
+
+		<p *ngIf="cargando()">Cargando productos...</p>
+
+		<table *ngIf="!cargando() && productos().length > 0">
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Marca</th>
+					<th>Min</th>
+					<th>Max</th>
+					<th>Precio</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let producto of productos()">
+					<td>{{ producto.nombre }}</td>
+					<td>{{ producto.marca }}</td>
+					<td>{{ producto.cantidad_min }}</td>
+					<td>{{ producto.cantidad_max }}</td>
+					<td>{{ producto.precio }}</td>
+					<td class="row-actions">
+						<button type="button" class="secondary" (click)="editar(producto)">Editar</button>
+						<button type="button" class="danger" (click)="eliminar(producto)">Eliminar</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<p *ngIf="!cargando() && productos().length === 0">No hay productos registrados.</p>
+	</section>
+</main>
